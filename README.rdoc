@@ -1,0 +1,22 @@
+= Kakaocert API SDK
+
+Kakaocert API SDK for Ruby
+
+== Required Ruby version
+>= 2.0.0
+
+== Installation
+
+  $ gem install kakaocert
+
+== Usage
+
+See Reference https://linkhub.co.kr/
+You must save source file in UTF8
+
+== Test
+
+  $ rake
+
+== Current Version
+v1.0.0
