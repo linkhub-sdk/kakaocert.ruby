@@ -184,21 +184,21 @@ class KakaocertService
     if clientCode.to_s == ''
       raise KakaocertException.new('-99999999', '이용기관코드가 입력되지 않았습니다.')
     end
-    httppost("/SignDirectDebit/Request", clientCode, cmsRequestInfo.to_json, "", userID)
+    httppost("/SignDirectDebit/Request", clientCode, cmsRequestInfo.to_json, "", userID)["receiptId"]
   end
 
   def requestESign(clientCode, esignRequestInfo, userID = "")
     if clientCode.to_s == ''
       raise KakaocertException.new('-99999999', '이용기관코드가 입력되지 않았습니다.')
     end
-    httppost("/SignToken/Request", clientCode, esignRequestInfo.to_json, "", userID)
+    httppost("/SignToken/Request", clientCode, esignRequestInfo.to_json, "", userID)["receiptId"]
   end
 
   def requestVerifyAuth(clientCode, verifyAuthRequestInfo, userID = "")
     if clientCode.to_s == ''
       raise KakaocertException.new('-99999999', '이용기관코드가 입력되지 않았습니다.')
     end
-    httppost("/SignIdentity/Request", clientCode, verifyAuthRequestInfo.to_json, "", userID)
+    httppost("/SignIdentity/Request", clientCode, verifyAuthRequestInfo.to_json, "", userID)["receiptId"]
   end
 
   def getCMSResult(clientCode, receiptID, userID = '')
