@@ -19,4 +19,4 @@ You must save source file in UTF8
   $ rake
 
 == Current Version
-v1.0.0
+v1.0.2
