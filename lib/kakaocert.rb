@@ -223,7 +223,7 @@ class KakaocertService
     httpget("/SignIdentity/#{receiptID}", clientCode, "")
   end
 
-  def getESignResult(clientCode, receiptID)
+  def getESignResult(clientCode, receiptID, signature = '')
     if clientCode.to_s == ''
       raise KakaocertException.new('-99999999', '이용기관코드가 입력되지 않았습니다.')
     end
@@ -231,8 +231,15 @@ class KakaocertService
       raise KakaocertException.new('-99999999', '접수아이디가 입력되지 않았습니다.')
     end
 
-    httpget("/SignToken/#{receiptID}", clientCode, "")
+    uri = "/SignToken/#{receiptID}"
+
+    if signature.to_s != ''
+      uri += "/"+signature
+    end
+
+    httpget(uri, clientCode, "")
   end
+
 
 
 end
