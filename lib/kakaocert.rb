@@ -191,7 +191,7 @@ class KakaocertService
     if clientCode.to_s == ''
       raise KakaocertException.new('-99999999', '이용기관코드가 입력되지 않았습니다.')
     end
-    httppost("/SignToken/Request", clientCode, esignRequestInfo.to_json, "", "")["receiptId"]
+    httppost("/SignToken/Request", clientCode, esignRequestInfo.to_json, "", "")
   end
 
   def requestVerifyAuth(clientCode, verifyAuthRequestInfo)
