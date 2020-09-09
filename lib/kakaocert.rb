@@ -201,7 +201,7 @@ class KakaocertService
     httppost("/SignIdentity/Request", clientCode, verifyAuthRequestInfo.to_json, "", "")["receiptId"]
   end
 
-  def getCMSResult(clientCode, receiptID)
+  def getCMSState(clientCode, receiptID)
     if clientCode.to_s == ''
       raise KakaocertException.new('-99999999', '이용기관코드가 입력되지 않았습니다.')
     end
@@ -209,10 +209,10 @@ class KakaocertService
       raise KakaocertException.new('-99999999', '접수아이디가 입력되지 않았습니다.')
     end
 
-    httpget("/SignDirectDebit/#{receiptID}", clientCode, "")
+    httpget("/SignDirectDebit/Status/#{receiptID}", clientCode, "")
   end
 
-  def getVerifyAuthResult(clientCode, receiptID)
+  def getVerifyAuthState(clientCode, receiptID)
     if clientCode.to_s == ''
       raise KakaocertException.new('-99999999', '이용기관코드가 입력되지 않았습니다.')
     end
@@ -220,10 +220,10 @@ class KakaocertService
       raise KakaocertException.new('-99999999', '접수아이디가 입력되지 않았습니다.')
     end
 
-    httpget("/SignIdentity/#{receiptID}", clientCode, "")
+    httpget("/SignIdentity/Status/#{receiptID}", clientCode, "")
   end
 
-  def getESignResult(clientCode, receiptID, signature = '')
+  def getESignState(clientCode, receiptID)
     if clientCode.to_s == ''
       raise KakaocertException.new('-99999999', '이용기관코드가 입력되지 않았습니다.')
     end
@@ -231,7 +231,42 @@ class KakaocertService
       raise KakaocertException.new('-99999999', '접수아이디가 입력되지 않았습니다.')
     end
 
-    uri = "/SignToken/#{receiptID}"
+    uri = "/SignToken/Status/#{receiptID}"
+
+    httpget(uri, clientCode, "")
+  end
+
+  def verifyCMS(clientCode, receiptID)
+    if clientCode.to_s == ''
+      raise KakaocertException.new('-99999999', '이용기관코드가 입력되지 않았습니다.')
+    end
+    if receiptID.to_s == ''
+      raise KakaocertException.new('-99999999', '접수아이디가 입력되지 않았습니다.')
+    end
+
+    httpget("/SignDirectDebit/Verify/#{receiptID}", clientCode, "")
+  end
+
+  def verifyAuth(clientCode, receiptID)
+    if clientCode.to_s == ''
+      raise KakaocertException.new('-99999999', '이용기관코드가 입력되지 않았습니다.')
+    end
+    if receiptID.to_s == ''
+      raise KakaocertException.new('-99999999', '접수아이디가 입력되지 않았습니다.')
+    end
+
+    httpget("/SignIdentity/Verify/#{receiptID}", clientCode, "")
+  end
+
+  def verifyESign(clientCode, receiptID, signature = '')
+    if clientCode.to_s == ''
+      raise KakaocertException.new('-99999999', '이용기관코드가 입력되지 않았습니다.')
+    end
+    if receiptID.to_s == ''
+      raise KakaocertException.new('-99999999', '접수아이디가 입력되지 않았습니다.')
+    end
+
+    uri = "/SignToken/Verify/#{receiptID}"
 
     if signature.to_s != ''
       uri += "/"+signature

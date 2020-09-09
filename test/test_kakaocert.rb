@@ -40,8 +40,8 @@ class BaseServiceTest < Test::Unit::TestCase
       "CallCenterNum" => '1600-8536',
       "Expires_in" => 60,
       "ReceiverBirthDay" => '19900108',
-      "ReceiverHP" => '01012341234',
-      "ReceiverName" => '홍길동',
+      "ReceiverHP" => '01043245117',
+      "ReceiverName" => '정요한',
       "BankAccountName" => '예금주명',
       "BankAccountNum" => '9-4324-5**7-58',
       "ClientUserID" => 'clientUserID-0423-01',
@@ -62,9 +62,20 @@ class BaseServiceTest < Test::Unit::TestCase
   end
 
   def test_4getCMSResult
-    receiptID = "020062214041000001"
+    receiptID = "020090910430800001"
 
-    response = BaseServiceTest::KakaocertInstance.getCMSResult(
+    response = BaseServiceTest::KakaocertInstance.getCMSState(
+      BaseServiceTest::AccessID,
+      receiptID,
+    )
+    puts response
+    assert_not_nil(response)
+  end
+
+  def test_4verifyCMS
+    receiptID = "020090910430800001"
+
+    response = BaseServiceTest::KakaocertInstance.verifyCMS(
       BaseServiceTest::AccessID,
       receiptID,
     )
@@ -78,8 +89,8 @@ class BaseServiceTest < Test::Unit::TestCase
       "CallCenterNum" => '1600-8536',
       "Expires_in" => 60,
       "ReceiverBirthDay" => '19900108',
-      "ReceiverHP" => '01012341234',
-      "ReceiverName" => '홍길동',
+      "ReceiverHP" => '01043245117',
+      "ReceiverName" => '정요한',
       "SubClientID" => '020040000001',
       "TMSMessage" => 'TMSMessage0423',
       "TMSTitle" => 'TMSTitle 0423',
@@ -98,9 +109,20 @@ class BaseServiceTest < Test::Unit::TestCase
   end
 
   def test_5getESignResult
-    receiptID = "020062214084900001"
+    receiptID = "020090910445400001"
 
-    response = BaseServiceTest::KakaocertInstance.getESignResult(
+    response = BaseServiceTest::KakaocertInstance.getESignState(
+      BaseServiceTest::AccessID,
+      receiptID,
+    )
+    puts response
+    assert_not_nil(response)
+  end
+
+  def test_5verifyESign
+    receiptID = "020090910445400001"
+
+    response = BaseServiceTest::KakaocertInstance.verifyESign(
       BaseServiceTest::AccessID,
       receiptID,
     )
@@ -114,13 +136,13 @@ class BaseServiceTest < Test::Unit::TestCase
       "CallCenterNum" => '1600-8536',
       "Expires_in" => 60,
       "ReceiverBirthDay" => '19900108',
-      "ReceiverHP" => '0101122',
-      "ReceiverName" => '홍길동',
+      "ReceiverHP" => '01043245117',
+      "ReceiverName" => '정요한',
       "SubClientID" => '020040000001',
       "TMSMessage" => 'TMSMessage0423',
       "TMSTitle" => 'TMSTitle 0423',
       "isAllowSimpleRegistYN" => false,
-      "isVerifyNameYN" => false,
+      "isVerifyNameYN" => true,
       "Token" => "token value",
       "PayLoad" => 'Payload123',
     }
@@ -133,10 +155,21 @@ class BaseServiceTest < Test::Unit::TestCase
     puts response
   end
 
-  def test_7getVerifyAuth
-    receiptID = "020062214152000001"
+  def test_7getVerifyState
+    receiptID = "020090910474400001"
 
-    response = BaseServiceTest::KakaocertInstance.getVerifyAuthResult(
+    response = BaseServiceTest::KakaocertInstance.getVerifyAuthState(
+      BaseServiceTest::AccessID,
+      receiptID,
+    )
+    puts response
+    assert_not_nil(response)
+  end
+
+  def test_7verifyAuth
+    receiptID = "020090910474400001"
+
+    response = BaseServiceTest::KakaocertInstance.verifyAuth(
       BaseServiceTest::AccessID,
       receiptID,
     )
