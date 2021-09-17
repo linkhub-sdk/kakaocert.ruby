@@ -13,11 +13,13 @@ require 'linkhub'
 class KakaocertService
 
   ServiceID_REAL = "KAKAOCERT"
-  ServiceURL_REAL = "https://kakaocert-api.linkhub.co.kr"
   KAKAOCERT_APIVersion = "1.0"
+  ServiceURL = "https://kakaocert-api.linkhub.co.kr"
+  ServiceURL_Static = "https://static-kakaocert-api.linkhub.co.kr"
+  ServiceURL_GA = "https://ga-kakaocert-api.linkhub.co.kr"
   BOUNDARY = "==KAKAOCERT_RUBY_SDK=="
 
-  attr_accessor :token_table, :scopes, :linkhub, :ipRestrictOnOff
+  attr_accessor :token_table, :scopes, :linkhub, :ipRestrictOnOff, :useStaticIP, :useGAIP
 
   # Generate Linkhub Class Singleton Instance
   class << self
@@ -27,6 +29,8 @@ class KakaocertService
       @instance.linkhub = Linkhub.instance(linkID, secretKey)
       @instance.scopes = ["member","310","320","330"]
       @instance.ipRestrictOnOff = true
+      @instance.useStaticIP = false
+      @instance.useGAIP = false
 
       return @instance
     end
@@ -44,6 +48,23 @@ class KakaocertService
     @ipRestrictOnOff = value
   end
 
+  def setUseStaticIP(value)
+    @useStaticIP = value
+  end
+
+  def setUseGAIP(value)
+    @useGAIP = value
+  end
+
+  def getServiceURL()
+    if @useGAIP
+      return ServiceURL_GA
+    elsif @useStaticIP
+      return ServiceURL_Static
+    else
+      return ServiceURL
+    end
+  end
 
   # Get Session Token by checking token-cached hash or token Request
   def getSession_Token(corpNum)
@@ -60,14 +81,14 @@ class KakaocertService
     else
       # Token's expireTime must use parse() because time format is hh:mm:ss.SSSZ
       expireTime = DateTime.parse(targetToken['expiration'])
-      serverUTCTime = DateTime.strptime(@linkhub.getTime())
+      serverUTCTime = DateTime.strptime(@linkhub.getTime(@useStaticIP, @useGAIP))
       refresh = expireTime < serverUTCTime
     end
 
     if refresh
       begin
         # getSessionToken from Linkhub
-        targetToken = @linkhub.getSessionToken(ServiceID_REAL, corpNum, @scopes, @ipRestrictOnOff ? "" : "*")
+        targetToken = @linkhub.getSessionToken(ServiceID_REAL, corpNum, @scopes, @ipRestrictOnOff ? "" : "*", @useStaticIP, @useGAIP)
 
       rescue LinkhubException => le
         raise KakaocertException.new(le.code, le.message)
@@ -102,7 +123,7 @@ class KakaocertService
       headers["x-pb-userid"] = userID
     end
 
-    uri = URI(ServiceURL_REAL + url)
+    uri = URI(getServiceURL() + url)
     request = Net::HTTP.new(uri.host, 443)
     request.use_ssl = true
 
@@ -132,7 +153,7 @@ class KakaocertService
         "Accept-Encoding" => "gzip,deflate",
     }
 
-    apiServerTime = @linkhub.getTime()
+    apiServerTime = @linkhub.getTime(@useStaticIP, @useGAIP)
 
     hmacTarget = "POST\n"
     hmacTarget += Base64.strict_encode64(Digest::MD5.digest(postData)) + "\n"
@@ -158,7 +179,7 @@ class KakaocertService
     headers["Authorization"] = "Bearer " + getSession_Token(corpNum)
 
 
-    uri = URI(ServiceURL_REAL + url)
+    uri = URI(getServiceURL() + url)
 
     https = Net::HTTP.new(uri.host, 443)
     https.use_ssl = true

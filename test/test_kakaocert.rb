@@ -2,6 +2,7 @@
 require 'test/unit'
 require 'date'
 require 'linkhub'
+# require_relative '../../linkhub.ruby/lib/linkhub.rb'
 require_relative '../lib/kakaocert.rb'
 
 class BaseServiceTest < Test::Unit::TestCase
