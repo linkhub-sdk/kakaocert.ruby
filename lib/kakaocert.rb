@@ -13,7 +13,7 @@ require 'linkhub'
 class KakaocertService
 
   ServiceID_REAL = "KAKAOCERT"
-  KAKAOCERT_APIVersion = "1.0"
+  KAKAOCERT_APIVersion = "2.0"
   ServiceURL = "https://kakaocert-api.linkhub.co.kr"
   ServiceURL_Static = "https://static-kakaocert-api.linkhub.co.kr"
   ServiceURL_GA = "https://ga-kakaocert-api.linkhub.co.kr"
@@ -156,7 +156,7 @@ class KakaocertService
     apiServerTime = @linkhub.getTime(@useStaticIP, @useGAIP)
 
     hmacTarget = "POST\n"
-    hmacTarget += Base64.strict_encode64(Digest::MD5.digest(postData)) + "\n"
+    hmacTarget += Base64.strict_encode64(Digest::SHA256.digest(postData)) + "\n"
     hmacTarget += apiServerTime + "\n"
 
     hmacTarget += KAKAOCERT_APIVersion + "\n"
@@ -164,7 +164,7 @@ class KakaocertService
     key = Base64.decode64(@linkhub._secretKey)
 
     data = hmacTarget
-    digest = OpenSSL::Digest.new("sha1")
+    digest = OpenSSL::Digest.new("sha256")
     hmac = Base64.strict_encode64(OpenSSL::HMAC.digest(digest, key, data))
 
     headers["x-kc-auth"] = @linkhub._linkID+' '+hmac
