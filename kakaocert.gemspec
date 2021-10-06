@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'kakaocert'
-  s.version     = '2.1.0'
-  s.date        = '2021-09-17'
+  s.version     = '2.50.0'
+  s.date        = '2021-10-06'
   s.summary     = 'Kakaocert API SDK'
   s.description = 'Kakaocert API SDK'
   s.authors     = ["Linkhub Dev"]
